@@ -1,0 +1,8 @@
+# Hosts file that tell Ansible how to communicate with the Kubernetes master and worker nodes
+[masters]
+master ansible_host=10.2.20.207 ansible_user=vagrant
+
+[slaves]
+slave1 ansible_host=10.2.20.208 ansible_user=vagrant
+slave2 ansible_host=10.2.20.209 ansible_user=vagrant
+slave3 ansible_host=10.2.20.210 ansible_user=vagrant

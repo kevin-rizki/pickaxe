@@ -1,0 +1,88 @@
+- name: Install and configure Apache Tomcat
+  hosts: webservers
+  become: true
+  vars:
+    tomcat_version: 9.0.56
+    tomcat_install_dir: /opt/tomcat
+
+  tasks:
+    # Install dependencies
+    - name: Install dependencies
+      apt:
+        name:
+          - openjdk-8-jdk
+          - wget
+        state: present
+
+    # Download and extract Tomcat
+    - name: Download and extract Apache Tomcat
+      get_url:
+        url: "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz"        
+        dest: /tmp/apache-tomcat-{{ tomcat_version }}.tar.gz
+      changed_when: false
+
+    - name: Extract Apache Tomcat
+      unarchive:
+        src: /tmp/apache-tomcat-{{ tomcat_version }}.tar.gz
+        dest: "{{ tomcat_install_dir }}"
+        extra_opts: [--strip-components=1]
+        remote_src: true
+        owner: root
+        group: root
+        mode: '0755'
+
+    # Create a Tomcat user and group
+    - name: Create Tomcat user and group
+      group:
+        name: tomcat
+        state: present
+
+    - name: Create Tomcat user and home directory
+      user:
+        name: tomcat
+        home: "{{ tomcat_install_dir }}"
+        shell: /bin/false
+        group: tomcat
+        create_home: false
+
+    # Set environment variables
+    - name: Set environment variables
+      lineinfile:
+        path: /etc/environment
+        line: 'CATALINA_HOME="{{ tomcat_install_dir }}"'
+        state: present
+
+    # Configure Tomcat server.xml file
+    - name: Configure Tomcat server.xml file
+      template:
+        src: templates/server.xml.j2
+        dest: "{{ tomcat_install_dir }}/conf/server.xml"
+        group: tomcat
+      notify:
+        - Restart Tomcat
+
+    # Create Tomcat systemd service file
+    - name: Create Tomcat systemd service file
+      template:
+        src: templates/tomcat.service.j2
+        dest: /etc/systemd/system/tomcat.service
+        group: tomcat
+      notify:
+        - Reload systemd
+
+    # Start and enable Tomcat service
+    - name: Start and enable Tomcat service
+      systemd:
+        name: tomcat
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Tomcat
+      systemd:
+        name: tomcat
+        state: restarted
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes

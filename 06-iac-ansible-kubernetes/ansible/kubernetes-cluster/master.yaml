@@ -1,0 +1,42 @@
+# Initialize the cluster and install Flanner (for provider of pod network plugin)
+---
+- hosts: masters
+  become: yes
+  tasks:
+  # This task not realy working
+  - name: install  ACL
+    apt:
+      name: acl
+      state: present
+  
+  - name: initialize the cluster
+    become: yes
+    shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+    args:
+      chdir: /home/ubuntu
+      creates: cluster_initialized.txt 
+  
+  - name: createc:\Users\CADIT-IDN\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-sandbox\workbench\workbench.html .kube directory
+    become: yes
+    file:
+      path: /home/ubuntu/.kube
+      state: directory
+      mode: 0755
+
+  - name: Creating an empty file
+    file:
+      path: /home/ubuntu/test.txt
+      state: touch
+  
+  - name: copy admin.conf to user's kube config
+    become: yes
+    copy: 
+      src: /etc/kubernetes/admin.conf
+      dest: /home/ubuntu/.kube/config
+      remote_src: yes
+      owner: ubuntu
+
+  - name: install Pod network
+    become_user: ubuntu
+    become: yes
+    shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
