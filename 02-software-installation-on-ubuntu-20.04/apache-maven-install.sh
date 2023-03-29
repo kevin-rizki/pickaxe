@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download and install Apache Maven
-wget -q https://downloads.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz -O /tmp/apache-maven.tar.gz
+wget https://dlcdn.apache.org/maven/maven-3/3.9.0/binaries/apache-maven-3.9.0-bin.tar.gz -o /tmp/apache-maven.tar.gz
 sudo tar xf /tmp/apache-maven.tar.gz -C /opt
 sudo ln -s /opt/apache-maven-3.8.4 /opt/maven
 
