@@ -1,5 +1,5 @@
 ---
-- hosts: nfs-clients
+- hosts: workers
   become: yes
   tasks:
     - name: install nfs-utils
@@ -9,8 +9,8 @@
       file:
         path: /mnt/data
         state: directory
-        owner: vagrant
-        group: vagrant
+        owner: iotadmin
+        group: iotadmin
         mode: '0775'
     - name: Mount volumn
-      shell: sudo mount 10.2.20.207:/home/vagrant/data /mnt/data
+      shell: sudo mount 192.168.7.149:/home/iotadmin/data /mnt/data

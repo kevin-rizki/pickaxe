@@ -11,32 +11,27 @@
   
   - name: initialize the cluster
     become: yes
-    shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+    shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.7.149 >> cluster_initialized.txt
     args:
-      chdir: /home/ubuntu
+      chdir: /home/iotadmin
       creates: cluster_initialized.txt 
   
-  - name: createc:\Users\CADIT-IDN\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-sandbox\workbench\workbench.html .kube directory
+  - name: create .kube directory
     become: yes
     file:
-      path: /home/ubuntu/.kube
+      path: /home/iotadmin/.kube
       state: directory
       mode: 0755
-
-  - name: Creating an empty file
-    file:
-      path: /home/ubuntu/test.txt
-      state: touch
   
   - name: copy admin.conf to user's kube config
     become: yes
     copy: 
       src: /etc/kubernetes/admin.conf
-      dest: /home/ubuntu/.kube/config
+      dest: /home/iotadmin/.kube/config
       remote_src: yes
-      owner: ubuntu
+      owner: iotadmin
 
   - name: install Pod network
-    become_user: ubuntu
+    become_user: iotadmin
     become: yes
     shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

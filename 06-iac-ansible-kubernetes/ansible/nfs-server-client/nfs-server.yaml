@@ -1,5 +1,5 @@
 ---
-- hosts: nfs-server
+- hosts: master
   become: yes
   tasks:
     - name: install nfs-utils
@@ -7,10 +7,10 @@
 
     - name: Create a mountable directory if it does not exist
       file:
-        path: /home/vagrant/data
+        path: /home/iotadmin/data
         state: directory
-        owner: vagrant
-        group: vagrant
+        owner: iotadmin
+        group: iotadmin
         mode: '0775'
     # - name: enable rpcbind nfslock nfs
     #   service:

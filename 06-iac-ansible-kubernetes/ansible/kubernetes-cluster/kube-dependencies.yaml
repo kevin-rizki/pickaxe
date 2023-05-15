@@ -14,7 +14,13 @@
           {
           "exec-opts": ["native.cgroupdriver=systemd"]
           }
-    
+
+    - name: install containerd
+      apt:
+        name: containerd
+        state: present
+        update_cache: true
+
     - name: install Docker
       apt: 
         name: docker.io

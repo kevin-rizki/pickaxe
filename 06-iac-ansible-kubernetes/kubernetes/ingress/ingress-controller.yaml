@@ -1,0 +1,47 @@
+#ingress.yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-controller
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+    load-balance: roundrobin
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: platform-svc
+            port:
+              number: 8080
+      - path: /Thingworx/WS
+        pathType: Prefix
+        backend:
+          service:
+            name: cxserver-svc
+            port:
+              number: 8080
+      - path: /Thingworx/WSTunnelServer
+        pathType: Prefix
+        backend:
+          service:
+            name: cxserver-svc
+            port:
+              number: 8080
+      - path: /Thingworx/WSTunnelClient
+        pathType: Prefix
+        backend:
+          service:
+            name: cxserver-svc
+            port:
+              number: 8080
+      - path: /Thingworx/VWS
+        pathType: Prefix
+        backend:
+          service:
+            name: cxserver-svc
+            port:
+              number: 8080

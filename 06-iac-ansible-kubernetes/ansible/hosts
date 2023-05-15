@@ -1,0 +1,8 @@
+# Hosts file that tell Ansible how to communicate with the Kubernetes master and worker nodes
+[masters]
+master ansible_host=localhost ansible_user=iotadmin
+
+[workers]
+worker1 ansible_host=192.168.7.150 ansible_user=iotadmin
+worker2 ansible_host=192.168.7.152 ansible_user=iotadmin
+worker3 ansible_host=192.168.7.204 ansible_user=iotadmin

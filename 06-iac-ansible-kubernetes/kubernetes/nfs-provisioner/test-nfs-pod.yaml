@@ -1,8 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: volume-test
+  name: test-pod
 spec:
+  nodeSelector:
+    kubernetes.io/hostname: "iotkubenode1"
   containers:
   - name: volume-test
     image: nginx:stable-alpine
@@ -15,4 +17,4 @@ spec:
   volumes:
   - name: volv
     persistentVolumeClaim:
-      claimName: local-path-pvc
+      claimName: test-claim 
